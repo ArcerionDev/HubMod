@@ -4,7 +4,7 @@ const fs = require('fs');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.DIRECT_MESSAGES] });
 client.commands = new Collection();
 const commandFolders = fs.readdirSync('./commands/')
-
+const popQuotes = require('./utils/popbotQuotes.json')
 for(const folder of commandFolders){
 
 if(!folder.endsWith('.js')){
@@ -25,7 +25,7 @@ if(!folder.endsWith('.js')){
 
 module.exports.commands = client.commands
 
-const prefix = "&"
+const prefix = "%"
 
 let db = {}
 db.blingdata = JSON.parse(fs.readFileSync('./data/currencystore.json', 'utf-8'))
@@ -82,6 +82,22 @@ client.on('message', async message => {
             }
         }
         fs.writeFileSync('./data/currencystore.json', JSON.stringify(db.blingdata))    
+        if(args.includes('popbot') || args.includes('pop')){
+
+            message.channel.createWebhook('Popbot', {
+                avatar: "https://cdn.discordapp.com/avatars/305490352880484353/e1b9e50cdec9e900f8c2e9a76a935416.webp",
+            })
+                .then(webhook => {
+            
+            webhook.send(popQuotes[Math.floor(Math.random()*popQuotes.length)]).then(() => {
+
+                webhook.delete()
+
+            })
+            })
+                .catch(console.error);
+
+        }
         if(!message.content.startsWith(prefix)) return;     
         let command;
       Array.from(client.commands).forEach(c => {

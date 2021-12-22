@@ -1,0 +1,17 @@
+{
+  "name": "hubmod",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Arcerion",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^13.1.0",
+    "lodash": "^4.17.21",
+    "zip-dir": "^2.0.0"
+  }
+}

@@ -7,7 +7,7 @@ const commandFolders = fs.readdirSync('./commands/')
 
 for(const folder of commandFolders){
 
-if(fs.lstatSync(`./commands/${folder}/`).isDirectory()){
+if(!folder.endsWith('.js')){
 
     let commandFiles = fs.readdirSync(`./commands/${folder}/`);
 

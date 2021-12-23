@@ -34,7 +34,7 @@ module.exports = {
                     }
                     if (rank) {
                         if(rank.length > 1){
-                            if(JSON.stringify(rank).charAt(JSON.stringify(rank).length-2) === 1){
+                            if(JSON.stringify(rank).charAt(JSON.stringify(rank).length-2) === "1"){
                                 rank = JSON.stringify(rank) + "th"
                             }else{
 

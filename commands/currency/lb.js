@@ -33,19 +33,27 @@ module.exports = {
                         if (Object.keys(sorted[i])[0] === sender) { rank = i + 1 }
                     }
                     if (rank) {
-                        switch (JSON.stringify(rank).slice(-1)) {
-                            case '1':
-                                rank = JSON.stringify(rank) + "st"
-                                break;
-                            case '2':
-                                rank = JSON.stringify(rank) + "nd"
-                                break;
-                            case '3':
-                                rank = JSON.stringify(rank) + "rd"
-                                break;
-                            default:
+                        if(rank.length > 1){
+                            if(JSON.stringify(rank).charAt(JSON.stringify(rank).length-2) === 1){
                                 rank = JSON.stringify(rank) + "th"
-                                break;
+                            }else{
+
+                                switch (JSON.stringify(rank).slice(-1)) {
+                                    case '1':
+                                        rank = JSON.stringify(rank) + "st"
+                                        break;
+                                    case '2':
+                                        rank = JSON.stringify(rank) + "nd"
+                                        break;
+                                    case '3':
+                                        rank = JSON.stringify(rank) + "rd"
+                                        break;
+                                    default:
+                                        rank = JSON.stringify(rank) + "th"
+                                        break;
+                                }
+
+                            }
                         }
                     }
                     let lbemd = new MessageEmbed()

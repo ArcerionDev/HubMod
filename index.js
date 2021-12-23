@@ -95,4 +95,9 @@ client.on('message', async message => {
         console.log(e)
     }
 })
+process.on('uncaughtException',exception => {
+
+    console.log(exception)
+
+})
 client.login(require('./token.json').token)

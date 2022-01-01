@@ -19,15 +19,18 @@ module.exports = {
                     blingarr.push(data)
                 });
                 let sorted = blingarr.sort((a, b) => Object.values(b)[0] - Object.values(a)[0])
-                function getRankFromUid(id) {
-                    for (let i = 0; i < sorted.length; i++) {
-                        if (Object.keys(sorted[i])[0] === id) {
-                            return i + 1;
+              
+                let paginated = _.chunk(sorted, 10)
+                function generateLbEmbed(arrnum) {
+
+                    function getRankFromUid(id) {
+                        for (let i = 0; i < sorted.length; i++) {
+                            if (Object.keys(sorted[i])[0] === id) {
+                                return i + 1;
+                            }
                         }
                     }
-                }
-                let paginated = _.chunk(sorted, 10)
-                function generateLbEmbed(arrnum, identity) {
+
                     let rank = null
                     for (let i = 0; i < sorted.length; i++) {
                         if (Object.keys(sorted[i])[0] === sender) { rank = i + 1 }
@@ -38,8 +41,7 @@ module.exports = {
                     let lbemd = new MessageEmbed()
                         .setTitle('Producer and Artist Hub Leaderboard')
                         .setThumbnail('https://cdn.discordapp.com/icons/480487206721552405/f15eaef39eecccfd7f60f8e1a9ae98c3.webp?size=512')
-
-                    lbemd.setFooter(`Requested by ${identity}`)
+                        .setFooter(`${current+1}/${paginated.length}`)
                     let desc = `Your leaderboard rank: **${rank ? rank : 'N/A'}**\n\n`
 
 
@@ -68,14 +70,14 @@ module.exports = {
                 }
 
                 let prev = new MessageButton()
-                    .setCustomId('PreviousPage')
+                    .setCustomId(`PreviousPage_${message.author.id}`)
                     .setLabel('Previous Page')
                     .setStyle('PRIMARY')
 
                 prev.setDisabled(current === 0)
 
                 let next = new MessageButton()
-                    .setCustomId('NextPage')
+                    .setCustomId(`NextPage_${message.author.id}`)
                     .setLabel('Next Page')
                     .setStyle('PRIMARY')
 
@@ -86,60 +88,7 @@ module.exports = {
                         prev,
                         next
                     );
-                return message.channel.send({ embeds: [generateLbEmbed(current, message.author.tag)], components: [row] }).then(() => {
-
-                    client.on('interactionCreate', async interaction => {
-                        if (interaction.customId === "NextPage") {
-                            // god forgive me for this
-                            if (interaction.user.tag != interaction.message.embeds[0].footer.text.split('Requested by ')[1]) {
-
-                                return client.api.interactions(interaction.id, interaction.token).callback.post({
-                                    data: {
-                                        type: 4,
-                                        data: {
-                                            content: "It's not your message.",
-                                            flags: 64,
-                                        }
-                                    }
-                                }).catch(e => { console.log(e) })
-
-                            }
-                            interaction.deferUpdate().catch(e => { console.log(e) })
-
-                            current++
-                            row.components[0].setDisabled(current === 0)
-                            row.components[1].setDisabled(current === paginated.length - 1)
-
-                            return interaction.message.edit({ embeds: [generateLbEmbed(current, interaction.user.tag)], components: [row] }).catch(e => { console.log(e) })
-                        }
-                        if (interaction.customId === "PreviousPage") {
-                            if (interaction.user.tag != interaction.message.embeds[0].footer.text.split('Requested by ')[1]) {
-
-                                return client.api.interactions(interaction.id, interaction.token).callback.post({
-                                    data: {
-                                        type: 4,
-                                        data: {
-                                            content: "It's not your message.",
-                                            flags: 64,
-                                        }
-                                    }
-                                }).catch(e => { console.log(e) })
-
-                            }
-                            interaction.deferUpdate().catch(e => { console.log(e) })
-                            current--
-                            row.components[0].setDisabled(current === 0)
-                            row.components[1].setDisabled(current === paginated.length - 1)
-                            return interaction.message.edit({ embeds: [generateLbEmbed(current, interaction.user.tag)], components: [row] }).catch(e => { console.log(e) })
-                        }
-
-                    })
-
-                })
-
-
-
-
+                return message.channel.send({ embeds: [generateLbEmbed(current)], components: [row] })
 
             })
         })

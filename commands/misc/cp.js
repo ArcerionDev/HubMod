@@ -106,64 +106,7 @@ module.exports = {
 
                                 message.channel.bulkDelete(3)
 
-                                message.channel.send({ embeds: [new MessageEmbed().setTitle(pollname).setDescription(`Created by ${message.author.tag}.\n\nPress one of the options below to cast your vote.`).setFooter(`Poll ID is ${id}. Mods or the poll creator can execute ${prefix}endcustom ${id} / ${prefix}ec ${id} to end it and show the results.`)], components: rows }).then(() => {
-
-                                    client.on('interactionCreate', async interaction => {
-
-                                        let parsed = interaction.customId.split('_')
-
-                                        if (parsed.length != 2) return; // this should never happen
-
-                                        let selectedId = parsed[0]
-
-                                        let selectedOpt = parsed[1]
-
-                                        if (!fs.existsSync(`./data/custompolls/${selectedId}.json`)) return client.api.interactions(interaction.id, interaction.token).callback.post({
-                                            data: {
-                                                type: 4,
-                                                data: {
-                                                    content: "Invalid poll. It may have ended or never existed.",
-                                                    flags: 64,
-                                                }
-                                            }
-                                        }).catch(error => { console.log(error) })
-
-                                        let data = JSON.parse(fs.readFileSync(`./data/custompolls/${selectedId}.json`, 'utf8'))
-
-                                        let hasVoted = false;
-
-                                        Object.keys(data.votes).forEach(e => {
-                                            if (data.votes[e].includes(interaction.user.id)) {
-                                                hasVoted = e
-
-                                            }
-                                        })
-
-                                        if (hasVoted) {
-
-                                            delete data.votes[hasVoted][data.votes[hasVoted].indexOf(interaction.user.id)]
-
-                                            data.votes[hasVoted] = data.votes[hasVoted].filter(Boolean)
-
-                                        }
-
-                                        data.votes[selectedOpt].push(interaction.user.id)
-
-                                        fs.writeFileSync(`./data/custompolls/${selectedId}.json`, JSON.stringify(data))
-
-                                        return client.api.interactions(interaction.id, interaction.token).callback.post({
-                                            data: {
-                                                type: 4,
-                                                data: {
-                                                    embeds: [new MessageEmbed().setTitle('Success! :tada:').setDescription(`${hasVoted ? 'Recasted' : "Casted"} your vote for **${data.options[selectedOpt - 1]}**.`)],
-                                                    flags: 64,
-                                                }
-                                            }
-                                        }).catch(error => { console.log(error) })
-
-                                    })
-
-                                })
+                                message.channel.send({ embeds: [new MessageEmbed().setTitle(pollname).setDescription(`Created by ${message.author.tag}.\n\nPress one of the options below to cast your vote.`).setFooter(`Poll ID is ${id}. Mods or the poll creator can execute ${prefix}endcustom ${id} / ${prefix}ec ${id} to end it and show the results.`)], components: rows })
 
                             })
                     })

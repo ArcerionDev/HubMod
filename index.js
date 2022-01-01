@@ -95,6 +95,51 @@ client.on('message', async message => {
         console.log(e)
     }
 })
+
+
+client.on('interactionCreate', async interaction => {
+    try {
+        db.blingdata = JSON.parse(fs.readFileSync('./data/currencystore.json', 'utf-8'))
+        db.channels = JSON.parse(fs.readFileSync('./data/channels.json', 'utf-8'))
+        db.ccs = JSON.parse(fs.readFileSync('./data/communitychallenges.json', 'utf-8'))
+        db.roles = JSON.parse(fs.readFileSync('./data/roles.json', 'utf-8'))
+        db.votes = JSON.parse(fs.readFileSync('./data/votes.json', 'utf-8'))
+        db.queue = JSON.parse(fs.readFileSync('./data/queue.json', 'utf-8'))
+        db.spqueue = JSON.parse(fs.readFileSync('./data/spqueue.json', 'utf8'))
+        db.samplepacks = JSON.parse(fs.readFileSync('./data/samplepacks.json', 'utf8'))
+
+        let parsed = interaction.customId.split('_')
+
+        let interactionName = parsed[0]
+
+        let interactions = fs.readdirSync('./interactions/')
+
+        let correctinteraction = null;
+
+        interactions.forEach(i => {
+
+            let customids = require(`./interactions/${i}`).customids
+
+            if(customids.includes(interactionName)){
+
+                correctinteraction = require(`./interactions/${i}`)
+
+            }
+
+        })
+
+        if(correctinteraction){
+
+            correctinteraction.execute(client,interaction,db,prefix)
+
+        }
+
+    } catch (e) {
+        console.log(e)
+    }
+})
+
+
 process.on('uncaughtException',exception => {
 
     console.log(exception)

@@ -34,13 +34,13 @@ module.exports = {
                                              if (amount.first().content.includes(`${prefix}cancel`)) return title.first().reply({ embeds: [new MessageEmbed().setTitle('Alright.').setDescription(`Restart the command if you'd like to submit a new challenge.`)] })
                                              chal.push(amount.first().content)
                                              chal.push(message.author.tag)
- 
+                                            let tempid = makeid(10)
                                              let y = new MessageButton()
-                                                 .setCustomId('y')
+                                                 .setCustomId(`y_${message.author.id}_${tempid}`)
                                                  .setLabel('Yes')
                                                  .setStyle('SUCCESS')
                                              let n = new MessageButton()
-                                                 .setCustomId('n')
+                                                 .setCustomId(`n_${message.author.id}_${tempid}`)
                                                  .setLabel('No')
                                                  .setStyle('SECONDARY')
  
@@ -49,51 +49,18 @@ module.exports = {
                                                      y,
                                                      n
                                                  );
-                                             amount.first().reply({ embeds: [new MessageEmbed().setTitle('Alright, set to `' + amount.first().content + '`!\n\n').setDescription('Your submission will next be sent to a queue. Does this look ok?').addField(`${chal[0]} • Team members - ${chal[2]}`, `${chal[1]} • Submitted by ${chal[3]}`, false)], components: [yn] }).then(m => {
-                                                 client.on('interactionCreate', async interaction => {
-                                                     if (interaction.user.tag != interaction.message.embeds[0].fields[0].value.split('• Submitted by ')[1]) {
- 
- 
- 
-                                                         return client.api.interactions(interaction.id, interaction.token).callback.post({
-                                                             data: {
-                                                                 type: 4,
-                                                                 data: {
-                                                                     content: "It's not your message.",
-                                                                     flags: 64,
-                                                                 }
-                                                             }
-                                                         }).catch(error => { console.log(error) })
- 
-                                                     }
- 
-                                                     if (interaction.customId === "y") {
-                                                         chal.push(makeid(10))
-                                                         db.queue.push(chal)
-                                                         fs.writeFileSync('./data/queue.json', JSON.stringify(db.queue))
-                                                         yn.components[0].setDisabled(true)
-                                                         yn.components[1].setDisabled(true)
-                                                         interaction.deferUpdate()
-                                                         interaction.message.edit({ embeds: [new MessageEmbed().setTitle('Alright, your amount is set to `' + amount.first().content + '`!\n\n').setDescription('Your submission will next be sent to a queue. Does this look ok?').addField(`${chal[0]} • Team members - ${chal[2]}`, `${chal[1]} • Submitted by ${chal[3]}`, false)], components: [yn] }).catch(error => { console.log(error) })
-                                                         interaction.message.reply({ embeds: [new MessageEmbed().setTitle('Success! :tada:').setDescription(`Your challenge has been submitted for approval! I'll dm you when it's been approved / denied.`)] }).catch(error => { console.log(error) })
-                                                         client.channels.fetch(db.channels.queue).then(c => {
- 
-                                                             c.send({ embeds: [new MessageEmbed().setTitle('New queued challenge with ID `' + chal[4] + "`.").addField(`${chal[0]} • Team members - ${chal[2]}`, `${chal[1]} • Submitted by ${chal[3]}`, false).setDescription(`Run the command ` + '`' + `${prefix}approve ${chal[4]}` + '` to approve this submission.')] }).catch(error => { console.log(error) })
- 
-                                                         })
-                                                     }
-                                                     if (interaction.customId === "n") {
-                                                         yn.components[0].setDisabled(true)
-                                                         yn.components[1].setDisabled(true)
-                                                         interaction.deferUpdate()
-                                                         interaction.message.edit({ embeds: [new MessageEmbed().setTitle('Alright, your amount is set to `' + amount.first().content + '`!\n\n').setDescription('Your submission will next be sent to a queue. Does this look ok?').addField(`${chal[0]} • Team members - ${chal[2]}`, `${chal[1]} • Submitted by ${chal[3]}`, false)], components: [yn] }).catch(error => { console.log(error) })
-                                                         return interaction.message.reply({ embeds: [new MessageEmbed().setTitle('Alright.').setDescription(`Restart the command if you'd like to resubmit a new challenge.`)] }).catch(error => { console.log(error) })
- 
-                                                     }
- 
-                                                 })
- 
+                                             amount.first().reply({ embeds: [new MessageEmbed().setTitle('Alright, set to `' + amount.first().content + '`!\n\n').setDescription('Your submission will next be sent to a queue. Does this look ok?').addField(`${chal[0]} • Team members - ${chal[2]}`, `${chal[1]} • Submitted by ${chal[3]}`, false)], components: [yn] }).then(() => {
+
+                                                let temp = JSON.parse(fs.readFileSync('./data/temp.json'))
+
+                                                temp[tempid] = chal
+
+                                                fs.writeFileSync('./data/temp.json', JSON.stringify(temp))
+
                                              })
+                                                 
+ 
+                                            
  
                                          })
  

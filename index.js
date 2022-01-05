@@ -24,7 +24,7 @@ if(!folder.endsWith('.js')){
 
 module.exports.commands = client.commands
 
-const prefix = "&"
+const prefix = "%"
 
 let db = {}
 db.blingdata = JSON.parse(fs.readFileSync('./data/currencystore.json', 'utf-8'))
@@ -82,7 +82,8 @@ client.on('message', async message => {
         }
         fs.writeFileSync('./data/currencystore.json', JSON.stringify(db.blingdata))    
         
-        if(!message.content.startsWith(prefix)) return;     
+        if(!message.content.startsWith(prefix)) return;
+        if(message.channel.type != 'GUILD_TEXT') return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription('Please execute this command in a server text channel.')]})   
         let command;
       Array.from(client.commands).forEach(c => {
             if(c[1].aliases.includes(args[0].slice(1))){

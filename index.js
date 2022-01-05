@@ -24,7 +24,7 @@ if(!folder.endsWith('.js')){
 
 module.exports.commands = client.commands
 
-const prefix = "%"
+const prefix = "&"
 
 let db = {}
 db.blingdata = JSON.parse(fs.readFileSync('./data/currencystore.json', 'utf-8'))

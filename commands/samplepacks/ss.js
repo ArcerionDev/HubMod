@@ -37,7 +37,7 @@ module.exports = {
                                                 }
                                                 sd.author = message.author.id
     
-                                                demo.first().reply({ embeds: [new MessageEmbed().setTitle(demo.first().attachments.map(e => e).length ? "Success! Your demo was added." : "Alright, you didn't include a demo.").setDescription('Now, upload your sample pack to [megafile.cc](https://megafile.cc/) (make sure the folder is zipped) and send the file link.').setImage("https://i.imgur.com/X1A8fqI.png")] }).then(() => {
+                                                demo.first().reply({ embeds: [new MessageEmbed().setTitle(demo.first().attachments.map(e => e).length ? "Success! Your demo was added." : "Alright, you didn't include a demo.").setDescription('Now, upload your sample pack to [mediafire](https://mediafire.com/) (make sure the folder is zipped) and send the file link.').setImage("https://i.imgur.com/ZFpK2fK.png")] }).then(() => {
                                                     function getFile() {
     
                                                         dm.channel.awaitMessages({ filter, max: 1 })
@@ -45,7 +45,7 @@ module.exports = {
     
                                                                 if (file.first().content.includes(`${prefix}cancel`)) return title.first().reply({ embeds: [new MessageEmbed().setTitle('Alright.').setDescription(`Restart the command if you'd like to submit a new sample pack.`)] })
     
-                                                                if (!file.first().content.startsWith('https://megafile.cc/')) {
+                                                                if (!file.first().content.startsWith('https://www.mediafire.com/')) {
                                                                     file.first().reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription('Your link was detected as invalid. Please enter another one.')] }).then(() => {                     
                                                                         getFile()
                                                                     })

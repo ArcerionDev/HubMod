@@ -141,9 +141,7 @@ client.on('interactionCreate', async interaction => {
 })
 
 
-process.on('uncaughtException', exception => {
+require('./utils/handleErrors')(client)
 
-    console.log(exception)
 
-})
 client.login(require('./config.json').token)

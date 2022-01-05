@@ -24,7 +24,7 @@ for (const folder of commandFolders) {
 
 module.exports.commands = client.commands
 
-const prefix = require('./config.json/').prefix
+const prefix = require('./config.json').prefix
 
 let db = {}
 db.blingdata = JSON.parse(fs.readFileSync('./data/currencystore.json', 'utf-8'))

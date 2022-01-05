@@ -14,7 +14,7 @@ module.exports = {
         message.reply({ embeds: [new MessageEmbed().setTitle('Sending info :information_source:').setDescription('I have messaged you with info on how to submit a samplepack. Check your DMs!')] }).then(() => {
 
             message.author.send({ embeds: [new MessageEmbed().setTitle('What do you want the sample pack title to be?').setDescription('Please answer by sending another message below, keep the title length to 150 characters or under.')] }).then(dm => {
-                const filter = m => m.author.id === dm.author.id;
+                const filter = m => m.author.id === message.author.id;
                 dm.channel.awaitMessages({ filter, max: 1 })
                     .then(title => {
                         if (title.first().content.includes(`${prefix}cancel`)) return title.first().reply({ embeds: [new MessageEmbed().setTitle('Alright.').setDescription(`Restart the command if you'd like to submit a new sample pack.`)] })
@@ -35,7 +35,7 @@ module.exports = {
                                                 } else {
                                                     sd.demo = demo.first().attachments.map(e => e)[0].url
                                                 }
-                                                sd.author = dm.author.id
+                                                sd.author = message.author.id
     
                                                 demo.first().reply({ embeds: [new MessageEmbed().setTitle(demo.first().attachments.map(e => e).length ? "Success! Your demo was added." : "Alright, you didn't include a demo.").setDescription('Now, upload your sample pack to [megafile.cc](https://megafile.cc/) (make sure the folder is zipped) and send the file link.').setImage("https://i.imgur.com/X1A8fqI.png")] }).then(() => {
                                                     function getFile() {

@@ -1,30 +1,30 @@
-const { Client, Intents, MessageEmbed, MessageActionRow, MessageButton, DiscordAPIError, Message, Collection} = require('discord.js');
+const { Client, Intents, MessageEmbed, MessageActionRow, MessageButton, DiscordAPIError, Message, Collection } = require('discord.js');
 const _ = require('lodash')
 const fs = require('fs');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.DIRECT_MESSAGES] });
 client.commands = new Collection();
 const commandFolders = fs.readdirSync('./commands/')
-for(const folder of commandFolders){
+for (const folder of commandFolders) {
 
-if(!folder.endsWith('.js')){
+    if (!folder.endsWith('.js')) {
 
-    let commandFiles = fs.readdirSync(`./commands/${folder}/`);
+        let commandFiles = fs.readdirSync(`./commands/${folder}/`);
 
-    for(let command of commandFiles){
-    
-        command = require(`./commands/${folder}/${command}`)
-    
-        client.commands.set(command.name,command)
-    
+        for (let command of commandFiles) {
+
+            command = require(`./commands/${folder}/${command}`)
+
+            client.commands.set(command.name, command)
+
+        }
+
     }
-
-}
 
 }
 
 module.exports.commands = client.commands
 
-const prefix = "&"
+const prefix = require('./config.json/').prefix
 
 let db = {}
 db.blingdata = JSON.parse(fs.readFileSync('./data/currencystore.json', 'utf-8'))
@@ -41,8 +41,8 @@ client.on('ready', () => {
 })
 client.on('messageReactionAdd', reaction => {
 
-    require(`./utils/dailyBling`)(reaction,db,prefix)
-    
+    require(`./utils/dailyBling`)(reaction, db, prefix)
+
 });
 let cooldown = []
 client.on('message', async message => {
@@ -80,18 +80,18 @@ client.on('message', async message => {
                 db.blingdata[message.author.id] = (Math.round(Math.random() * 5) + 5)
             }
         }
-        fs.writeFileSync('./data/currencystore.json', JSON.stringify(db.blingdata))    
-        
-        if(!message.content.startsWith(prefix)) return;
-        if(message.channel.type != 'GUILD_TEXT') return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription('Please execute this command in a server text channel.')]})   
+        fs.writeFileSync('./data/currencystore.json', JSON.stringify(db.blingdata))
+
+        if (!message.content.startsWith(prefix)) return;
+        if (message.channel.type != 'GUILD_TEXT') return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription('Please execute this command in a server text channel.')] })
         let command;
-      Array.from(client.commands).forEach(c => {
-            if(c[1].aliases.includes(args[0].slice(1))){
+        Array.from(client.commands).forEach(c => {
+            if (c[1].aliases.includes(args[0].slice(1))) {
                 command = c[1]
             }
         })
-        if(!command) return;
-        command.execute(client,message,args,db,prefix) 
+        if (!command) return;
+        command.execute(client, message, args, db, prefix)
     } catch (e) {
         console.log(e)
     }
@@ -121,7 +121,7 @@ client.on('interactionCreate', async interaction => {
 
             let customids = require(`./interactions/${i}`).customids
 
-            if(customids.includes(interactionName)){
+            if (customids.includes(interactionName)) {
 
                 correctinteraction = require(`./interactions/${i}`)
 
@@ -129,9 +129,9 @@ client.on('interactionCreate', async interaction => {
 
         })
 
-        if(correctinteraction){
+        if (correctinteraction) {
 
-            correctinteraction.execute(client,interaction,db,prefix)
+            correctinteraction.execute(client, interaction, db, prefix)
 
         }
 
@@ -141,9 +141,9 @@ client.on('interactionCreate', async interaction => {
 })
 
 
-process.on('uncaughtException',exception => {
+process.on('uncaughtException', exception => {
 
     console.log(exception)
 
 })
-client.login(require('./token.json').token)
+client.login(require('./config.json').token)

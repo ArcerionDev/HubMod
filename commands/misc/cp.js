@@ -1,6 +1,7 @@
 const fs = require('fs')
 const {MessageEmbed, MessageActionRow, MessageButton} = require('discord.js');
 const _ = require('lodash')
+const logger = require('../../utils/logger')
 function makeid(r) { for (var a = "", t = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", n = 0; n < r; n++)a += t.charAt(Math.floor(Math.random() * t.length)); return a }
 module.exports = {
 
@@ -104,9 +105,21 @@ module.exports = {
 
                                 fs.writeFileSync(`./data/custompolls/${id}.json`, JSON.stringify(toSubmit))
 
-                                message.channel.bulkDelete(3)
+                                message.channel.bulkDelete(5)
 
                                 message.channel.send({ embeds: [new MessageEmbed().setTitle(pollname).setDescription(`Created by ${message.author.tag}.\n\nPress one of the options below to cast your vote.`).setFooter(`Poll ID is ${id}. Mods or the poll creator can execute ${prefix}endcustom ${id} / ${prefix}ec ${id} to end it and show the results.`)], components: rows })
+
+                                logger.log(
+                                    {
+                                      action: "cpCreate",
+                                      channel: message.channel.id,
+                                      desc: `<@${message.author.id}> created the custom poll ${pollname} ${'`'}(${id})${'`'}`,
+                                      executor: message.author.id,
+                                      url: message.url,
+                                    },
+                                    client,
+                                    db
+                                  );
 
                             })
                     })

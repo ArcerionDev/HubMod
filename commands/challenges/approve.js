@@ -1,5 +1,6 @@
 const fs = require('fs')
 const {MessageEmbed} = require('discord.js');
+const logger = require('../../utils/logger')
 module.exports = {
 
     name: "approve",
@@ -28,7 +29,17 @@ module.exports = {
 
                 message.channel.send({ embeds: [new MessageEmbed().setTitle('Success! :tada:').setDescription('Submission approved.')] })
 
-                client.channels.fetch(db.channels.samplepacks).then(async c => {
+                logger.log({
+
+                    action: "approveSamplepack",
+                    user: data.author,
+                    channel: message.channel.id,
+                    desc: `<@${message.author.id}> approved <@${data.author}>'s samplepack ${data.id} (${data.title}).`,
+                    executor: message.author.id,
+                    url: message.url
+                },client,db)
+
+                return client.channels.fetch(db.channels.samplepacks).then(async c => {
                     let toSend = { embeds: [new MessageEmbed().setTitle('New samplepack in shop!').setThumbnail('https://cdn.discordapp.com/icons/480487206721552405/f15eaef39eecccfd7f60f8e1a9ae98c3.webp?size=512').setDescription(`:fire: **${data.title}**\n\n\n\n:notepad_spiral: ${data.desc}\n\n:microphone: ${(await (await client.users.fetch(data.author)).tag)}\n\n${data.demo ? ":cd: Demo included above" : ":x: No demo included"}\n\n<:bling:693310674612387862> ${data.value}\n\n:tools: ${"`" + data.id + "`"}`).setFooter(`Use the command ${prefix}buy ${data.id} to buy this pack.`)] }
                     if (data.demo) { toSend.files = [data.demo] }
                     c.send(toSend)
@@ -43,19 +54,29 @@ module.exports = {
                 }
                 if (submission === null) { return message.reply({ embeds: [new MessageEmbed().setTitle('Error').setDescription('That submission is invalid, or no longer exists.')] }) }
                 let chalname = db.queue[submission][0]
-                let username = db.queue[submission][3]
-                message.channel.guild.members.fetch({ cache: false }).then(members =>
-                    client.users.fetch(members.find(member => member.user.tag === username).id).then(e => { e.send({ embeds: [new MessageEmbed().setTitle('Approved! :tada:').setDescription('Your challenge `' + chalname + '` has been approved!').setTimestamp().setThumbnail(e.displayAvatarURL())] }).catch(e => { console.log(e) }) })
+               let author = db.queue[submission][3]
+              client.users.fetch(author).then(u => {
 
-                )
-
-
+                u.send({ embeds: [new MessageEmbed().setTitle('Approved! :tada:').setDescription('Your challenge `' + chalname + '` has been approved!').setTimestamp().setThumbnail(u.displayAvatarURL())] }).catch(e => { console.log(e) })
+            
+            })     
+               
+                let data = db.queue[submission].slice(0)
                 db.queue[submission].pop() // removing queue id
                 db.ccs.push(db.queue[submission])
                 delete db.queue[submission];
                 db.queue = db.queue.filter(Boolean)
                 fs.writeFileSync('./data/queue.json', JSON.stringify(db.queue))
                 fs.writeFileSync('./data/communitychallenges.json', JSON.stringify(db.ccs))
+                logger.log({
+
+                    action: "approveChallenge",
+                    user: author,
+                    channel: message.channel.id,
+                    desc: `<@${message.author.id}> approved <@${author}>'s challenge ${data[0]} (${data[4]}).`,
+                    executor: message.author.id,
+                    url: message.url
+                },client,db)
                 return message.channel.send({ embeds: [new MessageEmbed().setTitle('Success! :tada:').setDescription('Submission approved.')] })
             }
         })

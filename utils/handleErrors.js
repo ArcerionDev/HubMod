@@ -31,7 +31,7 @@ module.exports = function(client){
                 fs.writeFileSync(path,JSON.stringify(exception))
     
                 const errorEmbed = new MessageEmbed().setTitle(`An error occurred.`)
-                    .setDescription(` \`\`\`javascript\n${exception.name}\n${exception.message}\n\`\`\`\nError occurred in <#${exception.path.split('/')[2]}>.\n\n`)
+                    .setDescription(` \`\`\`javascript\n${exception.name}\n${exception.message}\n\`\`\`\nError occurred at ${exception.path}.`)
                     .addField(`Method`, exception.method, true)
                     .addField(`Status`, JSON.stringify(exception.httpStatus), true)
                     .addField(`Code`, JSON.stringify(exception.code), true);

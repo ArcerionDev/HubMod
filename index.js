@@ -25,6 +25,7 @@ for (const folder of commandFolders) {
 module.exports.commands = client.commands
 
 const prefix = require('./config.json').prefix
+require('./utils/handleErrors')(client)
 
 let db = {}
 db.blingdata = JSON.parse(fs.readFileSync('./data/currencystore.json', 'utf-8'))
@@ -35,13 +36,14 @@ db.votes = JSON.parse(fs.readFileSync('./data/votes.json', 'utf-8'))
 db.queue = JSON.parse(fs.readFileSync('./data/queue.json', 'utf-8'))
 db.spqueue = JSON.parse(fs.readFileSync('./data/spqueue.json', 'utf8'))
 db.samplepacks = JSON.parse(fs.readFileSync('./data/samplepacks.json', 'utf8'))
+module.exports.db = db
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
     client.user.setActivity(`${prefix}help | Developed by Arcerion#7298`, 'PLAYING')
 })
-client.on('messageReactionAdd', reaction => {
+client.on('messageReactionAdd', (reaction,user) => {
 
-    require(`./utils/dailyBling`)(reaction, db, prefix)
+    require(`./utils/dailyBling`)(client,reaction, db, prefix,user)
 
 });
 let cooldown = []
@@ -95,8 +97,10 @@ client.on('message', async message => {
     } catch (e) {
         console.log(e)
     }
-})
 
+    module.exports.db = db
+
+})
 
 client.on('interactionCreate', async interaction => {
     try {
@@ -139,9 +143,5 @@ client.on('interactionCreate', async interaction => {
         console.log(e)
     }
 })
-
-
-require('./utils/handleErrors')(client)
-
 
 client.login(require('./config.json').token)

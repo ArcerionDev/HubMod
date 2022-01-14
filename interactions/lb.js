@@ -74,14 +74,9 @@ module.exports = {
         
         if (interaction.user.id != interaction.customId.split('_')[1]) {
 
-            return client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                    type: 4,
-                    data: {
-                        content: "It's not your message.",
-                        flags: 64,
-                    }
-                }
+            return interaction.message.reply({
+                embeds: [new MessageEmbed().setTitle("Invalid").setDescription("It's not your message.")],
+                ephemeral: [true]
             }).catch(e => { console.log(e) })
 
         }

@@ -1,3 +1,9 @@
+const fs = require('fs')
+
+const {MessageEmbed} = require('discord.js')
+
+const logger = require('../../utils/logger')
+
 module.exports = {
 
     name: "cq",
@@ -13,7 +19,16 @@ module.exports = {
 
         fs.writeFileSync('./data/queue.json', JSON.stringify(db.queue))
 
-        message.channel.send({ embeds: [new MessageEmbed().setTitle('Success! :tada:').setDescription('Queue was cleared.')] })
+        logger.log({
+
+            action: "queueClear",
+            channel: message.channel.id,
+            desc: `<@${message.author.id}> cleared the challenge queue.`,
+            executor: message.author.id,
+            url: message.url
+        },client,db)
+
+        return message.channel.send({ embeds: [new MessageEmbed().setTitle('Success! :tada:').setDescription('Queue was cleared.')] })
 
     }
 

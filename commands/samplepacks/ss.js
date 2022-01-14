@@ -1,5 +1,6 @@
 const fs = require('fs')
 const {MessageEmbed} = require('discord.js');
+const logger = require('../../utils/logger');
 function makeid(r) { for (var a = "", t = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", n = 0; n < r; n++)a += t.charAt(Math.floor(Math.random() * t.length)); return a }
 module.exports = {
 
@@ -74,6 +75,16 @@ module.exports = {
                                                                                         db.spqueue[sd.id] = sd
                                                                                         sd.buyers = []
                                                                                         fs.writeFileSync('./data/spqueue.json', JSON.stringify(db.spqueue))
+                                                                                       
+                                                                                        logger.log({
+
+                                                                                            action: "submitSamplepack",
+                                                                                            channel: interaction.message.channel.id,
+                                                                                            desc: `<@${interaction.user.id}> submitted samplepack ${sd.title} (${sd.id}) to the samplepack queue.`,
+                                                                                            executor: interaction.user.id,
+                                                                                            url: interaction.message.url
+                                                                                        },client,db)
+                                                                                       
                                                                                         let toSend = { embeds: [new MessageEmbed().setTitle('New queued samplepack with ID `' + sd.id + "`.").addField(`Title - ${sd.title} • Description - ${sd.desc}`, `Cost - ${sd.value} • URL - ${sd.url}`, false).setDescription(`Run the command ` + '`' + `${prefix}approve ${sd.id}` + '` to approve this submission.')] }
                                                                                         if (sd.demo) { toSend.files = [sd.demo] }
                                                                                         client.channels.fetch(db.channels.queue).then(c => {

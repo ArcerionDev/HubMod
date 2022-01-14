@@ -1,5 +1,6 @@
 const fs = require('fs')
 const {MessageEmbed} = require('discord.js');
+const logger = require('../../utils/logger')
 module.exports = {
 
     name: "ev",
@@ -15,6 +16,15 @@ module.exports = {
             if (fetchUser.permissions.has('32') || message.author.id === "683792601219989601") {
 
                 if (!db.votes.inprogress) return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription('A vote is yet to start, use `'+prefix+'startvote / '+prefix+'sv` to start one.')] })
+
+                logger.log({
+
+                    action: "endCCVote",
+                    channel: message.channel.id,
+                    desc: `<@${message.author.id}> ended the challenge vote in <#${message.channel.id}>.`,
+                    executor: message.author.id,
+                    url: message.url
+                },client,db)
 
                 let results = []
 
@@ -39,7 +49,7 @@ module.exports = {
 
                             let winningchal = db.votes.challenges[0][winner]
 
-                            message.channel.send({ embeds: [new MessageEmbed().setTitle('Results').setDescription(`The vote has ended.\n\nThe majority voted for option **${winner + 1}**, which got **${results[winner]}** vote(s).`).addField(`${winningchal[0]} • Team members - ${winningchal[2]}`, `${winningchal[1]} • Submitted by ${winningchal[3]}`, false).setFooter(`Results • Option 1: ${results[0]} vote(s) | Option 2: ${results[1]} vote(s) | Option 3: ${results[2]} vote(s)`).setTimestamp()] })
+                            message.channel.send({ embeds: [new MessageEmbed().setTitle('Results').setDescription(`The vote has ended.\n\nThe majority voted for option **${winner + 1}**, which got **${results[winner]}** vote(s).`).addField(`${winningchal[0]} • Team members - ${winningchal[2]}`, `${winningchal[1]} • Submitted by <@${winningchal[3]}>`, false).setFooter(`Results • Option 1: ${results[0]} vote(s) | Option 2: ${results[1]} vote(s) | Option 3: ${results[2]} vote(s)`).setTimestamp()] })
                             break;
                         case 2:
 
@@ -49,7 +59,7 @@ module.exports = {
                                 .setFooter(`Results • Option 1: ${results[0]} vote(s) | Option 2: ${results[1]} vote(s) | Option 3: ${results[2]} vote(s)`).setTimestamp()
 
                             hasTied.forEach(e => {
-                                tied2.addField(`${db.votes.challenges[0][e][0]} • Team members - ${db.votes.challenges[0][e][2]}`, `${db.votes.challenges[0][e][1]} • Submitted by ${db.votes.challenges[0][e][3]}`, false)
+                                tied2.addField(`${db.votes.challenges[0][e][0]} • Team members - ${db.votes.challenges[0][e][2]}`, `${db.votes.challenges[0][e][1]} • Submitted by <@${db.votes.challenges[0][e][3]}>`, false)
                             })
 
                             message.channel.send({ embeds: [tied2] })
@@ -62,7 +72,7 @@ module.exports = {
                                 .setFooter(`Results • Option 1: ${results[0]} vote(s) | Option 2: ${results[1]} vote(s) | Option 3: ${results[2]} vote(s)`).setTimestamp()
 
                             hasTied.forEach(e => {
-                                tied3.addField(`${db.votes.challenges[0][e][0]} • Team members - ${db.votes.challenges[0][e][2]}`, `${db.votes.challenges[0][e][1]} • Submitted by ${db.votes.challenges[0][e][3]}`, false)
+                                tied3.addField(`${db.votes.challenges[0][e][0]} • Team members - ${db.votes.challenges[0][e][2]}`, `${db.votes.challenges[0][e][1]} • Submitted by <@${db.votes.challenges[0][e][3]}>`, false)
                             })
 
                             message.channel.send({ embeds: [tied3] })

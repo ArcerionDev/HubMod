@@ -1,50 +1,141 @@
-const fs = require('fs')
-const {MessageEmbed} = require('discord.js');
+const fs = require("fs");
+const { MessageEmbed } = require("discord.js");
+const logger = require("../../utils/logger");
 module.exports = {
-    name: "remove",
-    desc: "Remove bling from a user's balance. Only usable by moderators.",
-    aliases: ['remove'],
-    input: ['@user','amount'],
-    categories: [1],
-    execute: function(client,message,args,db,prefix){
-        message.guild.members.fetch(message.author.id).then(e => {
+  name: "remove",
+  desc: "Remove an amount from a user's balance. Only usable by moderators.",
+  aliases: ["remove"],
+  input: ["@user", "amount"],
+  categories: [1],
+  execute: function (client, message, args, db, prefix) {
+    message.guild.members.fetch(message.author.id).then(async (e) => {
+      if (!e.permissions.has("32"))
+        return message.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle("Error")
+              .setDescription(
+                `<@${message.author.id}>, you don't have permission to run this command.`
+              ),
+          ],
+        });
 
-            if (!args[1]) return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription(`<@${message.author.id}>, provide a user.`)] })
-            if (!args[1].startsWith('<@')) return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription(`<@${message.author.id}>, provide a user.`)] })
-            if (!args[2]) return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription(`<@${message.author.id}>, provide an amount to remove from this user's balance.`)] })
-            if (!message.mentions.members.first()) return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription(`<@${message.author.id}>, provide a valid user.`)] })
+      if (!args[1])
+        return message.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle("Invalid")
+              .setDescription(`<@${message.author.id}>, provide a user.`),
+          ],
+        });
 
-            let hasNonNum = false
+      if (!args[2])
+        return message.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle("Invalid")
+              .setDescription(
+                `<@${message.author.id}>, provide an amount to add to this user's balance.`
+              ),
+          ],
+        });
 
-            let numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
-            args[2].split('').forEach(e => {
+      args[2] = args[2].replaceAll("k", "000");
 
-                if (!numbers.includes(e)) {
-                    hasNonNum = true
-                }
+      let hasNonNum = false;
 
-            })
-            if (hasNonNum) return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription(`<@${message.author.id}>, provide a real number.`)] })
-            if (!e.permissions.has('32')) return message.reply({ embeds: [new MessageEmbed().setTitle('Error').setDescription(`<@${message.author.id}>, you don't have permission to run this command.`)] })
+      let numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+      args[2].split("").forEach((e) => {
+        if (!numbers.includes(e)) {
+          hasNonNum = true;
+        }
+      });
+      if (hasNonNum)
+        return message.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle("Invalid")
+              .setDescription(
+                `<@${message.author.id}>, provide a real number.`
+              ),
+          ],
+        });
 
-            if (db.blingdata[message.mentions.members.first().id]) {
+      if (parseInt(args[2]) <  1) {
+        return message.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle("Invalid")
+              .setDescription(
+                `<@${message.author.id}>, provide a number greater than 0.`
+              ),
+          ],
+        });
+      }
 
-                if (db.blingdata[message.mentions.members.first().id] < args[2]) return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription(`<@${message.author.id}>, ${message.mentions.members.first().user.tag} doesn't have enough money to remove that amount.`)] })
-                db.blingdata[message.mentions.members.first().id] = db.blingdata[message.mentions.members.first().id] - parseInt(args[2])
-            } else {
+      let subject = null;
 
-                return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription(`<@${message.author.id}>, ${message.mentions.members.first().user.tag} has no money.`)] })
-            }
+      if (args[1].match(/(\d+)/)) {
+        subject = args[1].match(/(\d+)/)[0];
+      } else {
+        let user = Array.from(await await message.guild.members.fetch()).find(
+          (u) => u[1].displayName.toLowerCase().includes(args[1])
+        );
 
-            Object.keys(db.blingdata).forEach(e => {
-                if (db.blingdata[e] < 1) { delete db.blingdata[e] }
-            });
+        if (user) {
+          subject = user[1].id;
+        }
+      }
 
-            fs.writeFileSync('./data/currencystore.json', JSON.stringify(db.blingdata))
+      if (!subject)
+        return message.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle("Invalid")
+              .setDescription(`<@${message.author.id}>, provide a valid user.`),
+          ],
+        });
 
-            message.channel.send({ embeds: [new MessageEmbed().setTitle('Success! :tada:').setDescription(`Successfully removed ${args[2]} bling from ${message.mentions.members.first().user.tag}.`)] })
+      if (db.blingdata[subject] < args[2])
+        return message.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle("Invalid")
+              .setDescription(
+                `<@${message.author.id}>, <@${subject}> doesn't have enough money to remove this amount from their balance.`
+              ),
+          ],
+        });
 
-        })
+      db.blingdata[subject] = db.blingdata[subject] - parseInt(args[2]);
 
-    }
-}
+      fs.writeFileSync(
+        "./data/currencystore.json",
+        JSON.stringify(db.blingdata)
+      );
+
+      logger.log(
+        {
+          action: "blingRemove",
+          user: subject,
+          channel: message.channel.id,
+          desc: `<@${message.author.id}> removed ${args[2]} bling from <@${subject}>'s balance.`,
+          executor: message.author.id,
+          url: message.url,
+        },
+        client,
+        db
+      );
+
+      message.channel.send({
+        embeds: [
+          new MessageEmbed()
+            .setTitle("Success! :tada:")
+            .setDescription(
+              `Successfully removed ${args[2]} bling from <@${subject}>.`
+            ),
+        ],
+      });
+    });
+  },
+};

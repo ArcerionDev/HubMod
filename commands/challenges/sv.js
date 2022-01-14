@@ -1,5 +1,6 @@
 const {MessageActionRow, MessageButton, MessageEmbed} = require('discord.js');
 const fs = require('fs')
+const logger = require('../../utils/logger')
 module.exports = {
     name: "sv",
     desc: "Start a challenge vote. Only usable by moderators.",
@@ -18,6 +19,15 @@ module.exports = {
 
 
                 if (db.ccs.length < 3) return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription(`There aren't enough challenges in the database to start a vote.`)] })
+
+                logger.log({
+
+                    action: "startCCVote",
+                    channel: message.channel.id,
+                    desc: `<@${message.author.id}> started the challenge vote in <#${message.channel.id}>.`,
+                    executor: message.author.id,
+                    url: message.url
+                },client,db)
 
                 // status: unsure if I'm even going to be able to figure out how to start, help
 
@@ -57,15 +67,15 @@ module.exports = {
                     .setTimestamp()
 
                 let one = new MessageButton()
-                    .setCustomId('one')
+                    .setCustomId('1')
                     .setLabel('1')
                     .setStyle('PRIMARY')
                 let two = new MessageButton()
-                    .setCustomId('two')
+                    .setCustomId('2')
                     .setLabel('2')
                     .setStyle('PRIMARY')
                 let three = new MessageButton()
-                    .setCustomId('three')
+                    .setCustomId('3')
                     .setLabel('3')
                     .setStyle('PRIMARY')
 
@@ -78,7 +88,7 @@ module.exports = {
 
                 for (let i = 0; i < 3; i++) {
 
-                    voteemb.addField(`**${i + 1}** •  ${votables[i][0]} • Team members - ${votables[i][2]}`, `${votables[i][1]} • Submitted by ${votables[i][3]}`, false)
+                    voteemb.addField(`**${i + 1}** •  ${votables[i][0]} • Team members - ${votables[i][2]}`, `${votables[i][1]} • Submitted by <@${votables[i][3]}>`, false)
 
 
                 }

@@ -1,6 +1,7 @@
 const zipdir = require('zip-dir')
 const {MessageEmbed} = require('discord.js')
 const fs = require('fs')
+const logger = require('../../utils/logger')
 module.exports = {
 
     name: "be",
@@ -13,6 +14,17 @@ module.exports = {
         zipdir('./errorlogs/', { saveTo: './errors.zip' }, async () => {
            await message.reply({embeds: [new MessageEmbed().setTitle('Backup').setDescription(`Saved <t:${Math.floor(Date.now() / 1000)}:R>`)],files: ['./errors.zip/']})
          fs.unlinkSync('./errors.zip')
+         logger.log(
+            {
+              action: "errorBackup",
+              channel: message.channel.id,
+              desc: `<@${message.author.id}> backed up the bot's errors`,
+              executor: message.author.id,
+              url: message.url,
+            },
+            client,
+            db
+          );
         })
       
     }

@@ -1,19 +1,23 @@
 const {MessageEmbed} = require('discord.js');
+const shopItems = require('../shopItems')
 module.exports = {
 
     name: "shop",
     desc: "Get a list of things you can buy with your bling.",
     aliases: ['shop'],
-    input: ['category (optional)'],
     categories: [1],
     execute: function(client,message,args,db,prefix){
 
         let shop = new MessageEmbed()
             .setTitle('The Bling Shop')
             .setDescription('Buy perks and items with the command `'+prefix+'buy [item]`')
-            .addField('<:bling:693310674612387862> 10,000 - Spotlight', `Get a chance to advertise your creations in <#${db.channels.spotlight}> for all to see!`)
-            .addField('<:bling:693310674612387862> 50,000 - Hustler', `Gain the **Hustler** role. Gives you a special color above everyone else, exclusive chat access, and the ability to react to more messages.`)
-            .addField('<:bling:693310674612387862> Varied - Sample Packs', `Purchase community made sample packs! Use ${prefix}shop samplepacks for more details.`)
+            
+        shopItems.forEach(i => {
+
+            shop.addField(`<:bling:693310674612387862> ${typeof i.meta.cost === "number" ? JSON.stringify(i.meta.cost).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : i.meta.cost}`,i.meta.desc)
+
+        })
+
         if (!args[1]) {
             message.channel.send({ embeds: [shop] })
         } else {

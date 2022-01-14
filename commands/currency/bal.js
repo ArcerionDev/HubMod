@@ -1,42 +1,39 @@
+const fs = require('fs')
 const {MessageEmbed} = require('discord.js');
+const logger = require('../../utils/logger')
 module.exports = {
     name: "bal",
     desc: "Get a user's balance.",
-    aliases: ['bal','balance'],
+    aliases: ["bal","balance"],
     input: ['@user (optional)'],
     categories: [1],
     execute: function(client,message,args,db,prefix){
+        message.guild.members.fetch(message.author.id).then(async e => {
 
-        if (message.mentions.members.first()) {
-            if (db.blingdata[message.mentions.members.first().id]) {
+            if (!args[1]) return message.reply({ embeds: [new MessageEmbed().setTitle(`Your balance`).setDescription(`You currently have ${'`'}${db.blingdata[message.author.id]}${'`'} bling.`).setFooter(`Use ${prefix}lb to see where you fall on the leaderboard.`).setThumbnail(message.author.avatarURL()).setTimestamp()] })
 
-                let bal = db.blingdata[message.mentions.members.first().id]
+           
+            let subject = null;
 
-                message.channel.send({ embeds: [new MessageEmbed().setTitle(`${message.mentions.members.first().user.tag}`).setDescription(message.mentions.members.first().user.tag + ' currently has `' + bal + '` bling.').setThumbnail(message.mentions.members.first().user.displayAvatarURL()).setTimestamp()] })
+            if(args[1].match(/(\d+)/)){
 
-            } else {
+                subject = args[1].match(/(\d+)/)[0]
 
-                message.channel.send({ embeds: [new MessageEmbed().setTitle(`${message.mentions.members.first().user.tag} has no money.`).setThumbnail(message.mentions.members.first().user.displayAvatarURL()).setTimestamp()] })
-
-
+            }else{
+                let user = Array.from(await (await message.guild.members.fetch())).find(u => u[1].displayName.toLowerCase().includes(args[1]))
+                
+                if(user){subject = user[1].id}
             }
-        }
 
-        else {
+            if (!subject) return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription(`<@${message.author.id}>, provide a valid user.`)] })
 
-            if (db.blingdata[message.author.id]) {
+            if(subject === message.author.id) return message.reply({ embeds: [new MessageEmbed().setTitle(`Your balance`).setDescription(`You currently have ${'`'}${db.blingdata[subject]}${'`'} bling.`).setFooter(`Use ${prefix}lb to see where you fall on the leaderboard.`).setThumbnail(message.author.avatarURL()).setTimestamp()] })
 
-                let bal = db.blingdata[message.author.id]
+            let user = await (await client.users.fetch(subject))
 
-                message.channel.send({ embeds: [new MessageEmbed().setTitle(`${message.author.tag}'s balance`).setDescription('You currently have `' + bal + '` bling.').setThumbnail(message.author.displayAvatarURL()).setTimestamp()] })
-
-            } else {
-
-                message.channel.send({ embeds: [new MessageEmbed().setTitle(`${message.author.tag}, you have no money.`).setDescription(`Chat or post submissions in <#${db.channels.daily}> to get bling to buy things from the shop!`).setThumbnail(message.author.displayAvatarURL()).setTimestamp()] })
-
-
-            }
-        }
-
+            
+           return message.reply({ embeds: [new MessageEmbed().setTitle(`${user.username}#${user.discriminator}${db.blingdata[subject] ? `'s balance` : ' has no money.'}`).setDescription(`${db.blingdata[subject] ? `<@${subject}> currently has ${'`'}${db.blingdata[subject]}${'`'} bling.` : `Chat or participate in challenges to get money!`}`).setThumbnail(user.avatarURL()).setFooter(`${db.blingdata[subject] ? `Use ${prefix}lb to see where they fall on the leaderboard.` : 'Check out the challenges category in the server to get started.'}`).setTimestamp()]})
+            
+        })
     }
 }

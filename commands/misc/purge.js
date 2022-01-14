@@ -1,3 +1,5 @@
+const logger = require("../../utils/logger")
+
 module.exports = {
 
 name: "purge",
@@ -31,6 +33,18 @@ execute: function(client,message,args,db,prefix){
             message.channel.bulkDelete(parseInt(args[1])).catch(() => { })
 
         }, 700)
+
+        logger.log(
+            {
+              action: "purgeMessages",
+              channel: message.channel.id,
+              desc: `<@${message.author.id}> purged ${args[1]} messages from <#${message.channel.id}>`,
+              executor: message.author.id,
+              url: message.url,
+            },
+            client,
+            db
+          );
 
     })
 }

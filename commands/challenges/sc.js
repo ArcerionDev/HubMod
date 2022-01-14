@@ -33,7 +33,7 @@ module.exports = {
                                          .then(amount => {
                                              if (amount.first().content.includes(`${prefix}cancel`)) return title.first().reply({ embeds: [new MessageEmbed().setTitle('Alright.').setDescription(`Restart the command if you'd like to submit a new challenge.`)] })
                                              chal.push(amount.first().content)
-                                             chal.push(message.author.tag)
+                                             chal.push(message.author.id)
                                             let tempid = makeid(10)
                                              let y = new MessageButton()
                                                  .setCustomId(`y_${message.author.id}_${tempid}`)
@@ -49,7 +49,7 @@ module.exports = {
                                                      y,
                                                      n
                                                  );
-                                             amount.first().reply({ embeds: [new MessageEmbed().setTitle('Alright, set to `' + amount.first().content + '`!\n\n').setDescription('Your submission will next be sent to a queue. Does this look ok?').addField(`${chal[0]} • Team members - ${chal[2]}`, `${chal[1]} • Submitted by ${chal[3]}`, false)], components: [yn] }).then(() => {
+                                             amount.first().reply({ embeds: [new MessageEmbed().setTitle('Alright, set to `' + amount.first().content + '`!\n\n').setDescription('Your submission will next be sent to a queue. Does this look ok?').addField(`${chal[0]} • Team members - ${chal[2]}`, `${chal[1]} • Submitted by <@${chal[3]}>`, false)], components: [yn] }).then(() => {
 
                                                 let temp = JSON.parse(fs.readFileSync('./data/temp.json'))
 

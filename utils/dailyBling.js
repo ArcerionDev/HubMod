@@ -1,6 +1,7 @@
 const fs = require('fs')
-let {MessageEmbed} = require('discord.js')
-module.exports = function(reaction, db, prefix){
+let {MessageEmbed} = require('discord.js');
+const logger = require('./logger');
+module.exports = function(client,reaction, db, prefix, user){
 
     if (reaction.message.author.bot) return;
     reaction.message.fetch(reaction.message.channelId).then(m => {
@@ -24,7 +25,15 @@ module.exports = function(reaction, db, prefix){
 
             }
             fs.writeFileSync('./data/currencystore.json', JSON.stringify(db.blingdata)) // now that currency has been given, we update the data.
+            logger.log({
 
+                action: "d30Check",
+                user: e.message.author.id,
+                channel: e.message.channel.id,
+                desc: `<@${user.id}> checked ${e.message.author}'s daily 30, giving them 2000 bling.`,
+                executor: user.id,
+                url: e.message.url
+            },client,db)
         })
     })
 

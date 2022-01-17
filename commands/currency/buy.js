@@ -1,6 +1,10 @@
 const fs = require("fs");
 const {MessageEmbed, MessageActionRow, MessageButton} = require('discord.js');
-const shopItems = require("../shopItems");
+let shopItems = []
+fs.readdirSync('./items').forEach(i => {
+    shopItems.push(require(`../../items/${i}`))
+
+});
 module.exports = {
   name: "buy",
   desc: "Buy an item from the shop.",
@@ -23,7 +27,7 @@ module.exports = {
       require("../../utils/buySamplepack")(client, null, message, args, db, prefix);
     } else {
       let toBuy = shopItems.find(
-        (i) => i.meta.name.toLowerCase() === args[1].toLowerCase()
+        (i) => i.meta.id.toLowerCase() === args[1].toLowerCase()
       );
 
       if (!toBuy || !toBuy.purchase)
@@ -74,7 +78,7 @@ module.exports = {
           new MessageEmbed()
             .setTitle("Confirmation")
             .setDescription(
-              `Are you sure you want to buy ${"`"}${toBuy.meta.name}${"`"} for ${'`'}${toBuy.meta.cost}${'`'}?`
+              `Are you sure you want to buy ${"`"}${toBuy.meta.name}${"`"} for ${'`'}${JSON.stringify(toBuy.meta.cost).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}${'`'}?`
             ),
         ],
         components: [

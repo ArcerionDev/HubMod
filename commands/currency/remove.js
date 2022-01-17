@@ -119,7 +119,7 @@ module.exports = {
           action: "blingRemove",
           user: subject,
           channel: message.channel.id,
-          desc: `<@${message.author.id}> removed ${args[2]} bling from <@${subject}>'s balance.`,
+          desc: `<@${message.author.id}> removed ${args[2].replace(/\B(?=(\d{3})+(?!\d))/g, ",")} bling from <@${subject}>'s balance.`,
           executor: message.author.id,
           url: message.url,
         },
@@ -132,7 +132,7 @@ module.exports = {
           new MessageEmbed()
             .setTitle("Success! :tada:")
             .setDescription(
-              `Successfully removed ${args[2]} bling from <@${subject}>.`
+              `Successfully removed ${args[2].replace(/\B(?=(\d{3})+(?!\d))/g, ",")} bling from <@${subject}>.`
             ),
         ],
       });

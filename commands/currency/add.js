@@ -111,7 +111,7 @@ module.exports = {
           action: "blingAdd",
           user: subject,
           channel: message.channel.id,
-          desc: `<@${message.author.id}> added ${args[2]} bling to <@${subject}>'s balance.`,
+          desc: `<@${message.author.id}> added ${args[2].replace(/\B(?=(\d{3})+(?!\d))/g, ",")} bling to <@${subject}>'s balance.`,
           executor: message.author.id,
           url: message.url,
         },
@@ -124,7 +124,7 @@ module.exports = {
           new MessageEmbed()
             .setTitle("Success! :tada:")
             .setDescription(
-              `Successfully gave ${args[2]} bling to <@${subject}>.`
+              `Successfully gave ${args[2].replace(/\B(?=(\d{3})+(?!\d))/g, ",")} bling to <@${subject}>.`
             ),
         ],
       });

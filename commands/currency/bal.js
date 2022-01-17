@@ -10,7 +10,7 @@ module.exports = {
     execute: function(client,message,args,db,prefix){
         message.guild.members.fetch(message.author.id).then(async e => {
 
-            if (!args[1]) return message.reply({ embeds: [new MessageEmbed().setTitle(`Your balance`).setDescription(`You currently have ${'`'}${db.blingdata[message.author.id]}${'`'} bling.`).setFooter(`Use ${prefix}lb to see where you fall on the leaderboard.`).setThumbnail(message.author.avatarURL()).setTimestamp()] })
+            if (!args[1]) return message.reply({ embeds: [new MessageEmbed().setTitle(`Your balance`).setDescription(`You currently have ${'`'}${JSON.stringify(db.blingdata[message.author.id]).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}${'`'} bling.`).setFooter(`Use ${prefix}lb to see where you fall on the leaderboard.`).setThumbnail(message.author.avatarURL()).setTimestamp()] })
 
            
             let subject = null;
@@ -27,12 +27,12 @@ module.exports = {
 
             if (!subject) return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription(`<@${message.author.id}>, provide a valid user.`)] })
 
-            if(subject === message.author.id) return message.reply({ embeds: [new MessageEmbed().setTitle(`Your balance`).setDescription(`You currently have ${'`'}${db.blingdata[subject]}${'`'} bling.`).setFooter(`Use ${prefix}lb to see where you fall on the leaderboard.`).setThumbnail(message.author.avatarURL()).setTimestamp()] })
+            if(subject === message.author.id) return message.reply({ embeds: [new MessageEmbed().setTitle(`Your balance`).setDescription(`You currently have ${'`'}${JSON.stringify(db.blingdata[subject]).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}${'`'} bling.`).setFooter(`Use ${prefix}lb to see where you fall on the leaderboard.`).setThumbnail(message.author.avatarURL()).setTimestamp()] })
 
             let user = await (await client.users.fetch(subject))
 
             
-           return message.reply({ embeds: [new MessageEmbed().setTitle(`${user.username}#${user.discriminator}${db.blingdata[subject] ? `'s balance` : ' has no money.'}`).setDescription(`${db.blingdata[subject] ? `<@${subject}> currently has ${'`'}${db.blingdata[subject]}${'`'} bling.` : `Chat or participate in challenges to get money!`}`).setThumbnail(user.avatarURL()).setFooter(`${db.blingdata[subject] ? `Use ${prefix}lb to see where they fall on the leaderboard.` : 'Check out the challenges category in the server to get started.'}`).setTimestamp()]})
+           return message.reply({ embeds: [new MessageEmbed().setTitle(`${user.username}#${user.discriminator}${db.blingdata[subject] ? `'s balance` : ' has no money.'}`).setDescription(`${db.blingdata[subject] ? `<@${subject}> currently has ${'`'}${JSON.stringify(db.blingdata[subject]).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}${'`'} bling.` : `Chat or participate in challenges to get money!`}`).setThumbnail(user.avatarURL()).setFooter(`${db.blingdata[subject] ? `Use ${prefix}lb to see where they fall on the leaderboard.` : 'Check out the challenges category in the server to get started.'}`).setTimestamp()]})
             
         })
     }

@@ -36,7 +36,7 @@ module.exports = {
                         if (Object.keys(sorted[i])[0] === sender) { rank = i + 1 }
                     }
                     if (rank) {
-                       rank = '#'+rank
+                       rank = rank + (["st","nd","rd"][((rank+90)%100-10)%10-1]||"th")
                     }
                     let lbemd = new MessageEmbed()
                         .setTitle('Producer and Artist Hub Leaderboard')
@@ -56,13 +56,13 @@ module.exports = {
                             if (u[0] === Object.keys(paginated[arrnum][i])[0]) {
 
                                 hasMatch = true
-                                desc = desc + `**#${getRankFromUid(Object.keys(paginated[arrnum][i])[0])}:** ${u[1].user.tag} • <:bling:693310674612387862> ${paginated[arrnum][i][Object.keys(paginated[arrnum][i])[0]]}\n\n`
+                                desc = desc + `**#${getRankFromUid(Object.keys(paginated[arrnum][i])[0])}:** ${u[1].user.tag} • <:bling:693310674612387862> ${JSON.stringify(paginated[arrnum][i][Object.keys(paginated[arrnum][i])[0]]).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n\n`
 
                             }
 
                         })
 
-                        if (!hasMatch) { desc = desc + `**#${getRankFromUid(Object.keys(paginated[arrnum][i])[0])}:** ${Object.keys(paginated[arrnum][i])[0]} • <:bling:693310674612387862> ${paginated[arrnum][i][Object.keys(paginated[arrnum][i])[0]]}\n\n` }
+                        if (!hasMatch) { desc = desc + `**#${getRankFromUid(Object.keys(paginated[arrnum][i])[0])}:** ${Object.keys(paginated[arrnum][i])[0]} • <:bling:693310674612387862> ${JSON.stringify(paginated[arrnum][i][Object.keys(paginated[arrnum][i])[0]]).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n\n` }
 
                     }
                     lbemd.setDescription(desc)

@@ -1,7 +1,11 @@
 const fs = require("fs");
 const { MessageEmbed } = require("discord.js");
 const logger = require("../utils/logger");
-const shopItems = require("../commands/shopItems");
+let shopItems = []
+fs.readdirSync('./items').forEach(i => {
+    shopItems.push(require(`../items/${i}`))
+
+})
 module.exports = {
   customids: ["confirmPurchase", "denyPurchase"],
   execute: function (client, interaction, db, prefix) {

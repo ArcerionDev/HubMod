@@ -7,7 +7,7 @@ module.exports = {
     desc: "Deny a challenge/samplepack in the queue. Only usable by moderators.",
     aliases: ["deny"],
     input: ["ID"],
-    categories: [0,2],
+    categories: ["challenges","currency"],
     execute: function(client,message,args,db,prefix){
 
         args = message.content.split(' ')

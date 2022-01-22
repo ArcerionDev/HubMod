@@ -4,21 +4,21 @@ const fs = require('fs')
 const logger = require('../../utils/logger')
 module.exports = {
 
-    name: "bd",
-    desc: "Back up the bot's data in a zip file. Only usable by the bot owner.",
-    aliases: ['backupdata','bd'],
-    categories: [3],
+    name: "backuperrors",
+    desc: "Back up errors that the bot has logged. Only usable by the bot owner.",
+    aliases: ['backuperrors','be'],
+    categories: ["misc"],
     execute:  function(client,message,args,db,prefix){
         if (message.author.id != "683792601219989601") return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription(`Sorry, you don't have permission to run this command.`)] })
 
-        zipdir('./data', { saveTo: './data.zip' }, async () => {
-           await message.reply({embeds: [new MessageEmbed().setTitle('Backup').setDescription(`Saved <t:${Math.floor(Date.now() / 1000)}:R>`)],files: ['./data.zip/']})
-           try{fs.unlinkSync('./data.zip/')}catch{}
-           logger.log(
+        zipdir('./errorlogs/', { saveTo: './errors.zip' }, async () => {
+           await message.reply({embeds: [new MessageEmbed().setTitle('Backup').setDescription(`Saved <t:${Math.floor(Date.now() / 1000)}:R>`)],files: ['./errors.zip/']})
+         fs.unlinkSync('./errors.zip')
+         logger.log(
             {
-              action: "dataBackup",
+              action: "errorBackup",
               channel: message.channel.id,
-              desc: `<@${message.author.id}> backed up the bot's data`,
+              desc: `<@${message.author.id}> backed up the bot's errors`,
               executor: message.author.id,
               url: message.url,
             },

@@ -2,10 +2,10 @@ const {MessageEmbed} = require('discord.js');
 
 module.exports = {
 
-    name: "sp",
+    name: "samplepacks",
     desc: "Get the community's current samplepacks in a list.",
     aliases: ['samplepacks','sp'],
-    categories: [2],
+    categories: ["samplepacks"],
     execute: function(client,message,args,db,prefix){
 
         let displays = []

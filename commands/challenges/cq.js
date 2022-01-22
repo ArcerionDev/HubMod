@@ -9,7 +9,7 @@ module.exports = {
     name: "cq",
     desc: "Clear the challenge queue. Only usable by the bot owner.",
     aliases: ['clearqueue','cq'],
-    categories: [0],
+    categories: ["challenges"],
     execute: function(client,message,args,db,prefix){
 
         

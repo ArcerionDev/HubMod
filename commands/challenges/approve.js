@@ -7,7 +7,7 @@ module.exports = {
     desc: "Approve a challenge/samplepack in the queue. Only usable by moderators.",
     aliases: ["approve"],
     input: ["ID"],
-    categories: [0,2],
+    categories: ["challenges","currency"],
     execute: function(client,message,args,db,prefix){
 
         message.guild.members.fetch(message.author.id).then(fetchUser => {

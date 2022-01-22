@@ -6,7 +6,7 @@ module.exports = {
     name: "ev",
     desc: "End the server challenge vote, if one's in progress. Only usable by moderators.",
     aliases: ['endvote','ev'],
-    categories: [0],
+    categories: ["challenges"],
     execute: function(client,message,args,db,prefix){
         
         message.guild.members.fetch(message.author.id).then(fetchUser => {

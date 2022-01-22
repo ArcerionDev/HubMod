@@ -4,10 +4,10 @@ const logger = require('../../utils/logger');
 function makeid(r) { for (var a = "", t = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", n = 0; n < r; n++)a += t.charAt(Math.floor(Math.random() * t.length)); return a }
 module.exports = {
 
-    name: "ss",
+    name: "submitsamplepack",
     desc: "Submit a samplepack to the queue.",
     aliases: ['submitsamplepack','ss'],
-    categories: [2],
+    categories: ["samplepacks"],
     execute: function(client,message,args,db,prefix){
 
         

@@ -5,7 +5,7 @@ module.exports = {
     name: "sv",
     desc: "Start a challenge vote. Only usable by moderators.",
     aliases: ['startvote','sv'],
-    categories: [0],
+    categories: ["challenges"],
     execute: function(client,message,args,db,prefix){
 
         message.guild.members.fetch(message.author.id).then(fetchUser => {

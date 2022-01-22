@@ -2,11 +2,11 @@ const {MessageEmbed} = require('discord.js');
 
 module.exports = {
 
-    name: "sd",
+    name: "samplepackdetails",
     desc: "Get details on a samplepack.",
     aliases: ['samplepackdetails','sd'],
     input: ['ID'],
-    categories: [2],
+    categories: ["samplepacks"],
     execute: async function(client,message,args,db,prefix){
 
         args = message.content.split(' ')

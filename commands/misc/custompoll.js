@@ -5,10 +5,10 @@ const logger = require('../../utils/logger')
 function makeid(r) { for (var a = "", t = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", n = 0; n < r; n++)a += t.charAt(Math.floor(Math.random() * t.length)); return a }
 module.exports = {
 
-    name: "cp",
+    name: "custompoll",
     desc: "Generate a custom poll for users to vote on.",
     aliases: ['custompoll','cp'],
-    categories: [3],
+    categories: ["misc"],
     execute: function(client,message,args,db,prefix){
 
         message.reply({ embeds: [new MessageEmbed().setTitle('Enter the name for the poll below.').setDescription('Keep this to 150 characters or under.')] }).then(() => {

@@ -68,19 +68,23 @@ client.on('message', async message => {
 
         }
         if (message.author.bot) return;
+        let messagedata = JSON.parse(fs.readFileSync('./data/stats/messages.json','utf8'))
+        
+        messagedata[message.author.id] = (messagedata[message.author.id] ? ++messagedata[message.author.id] : 1)
 
-        if (cooldown.includes(message.author.id)) {
-        } else {
-            if (db.blingdata[message.author.id]) {
-                db.blingdata[message.author.id] = db.blingdata[message.author.id] + (Math.round(Math.random() * 5) + 5)
-                cooldown.push(message.author.id)
+        fs.writeFileSync('./data/stats/messages.json',JSON.stringify(messagedata))
+        if (!cooldown.includes(message.author.id)) {
+            
+            let blingdata = db.blingdata
+
+            let amt = (Math.round(Math.random() * 5) + 5) * (require('./commands/currency/setMultiplier').multiplier || 1)
+
+            blingdata[message.author.id] = (blingdata[message.author.id] ? blingdata[message.author.id] + amt : amt)
+            cooldown.push(message.author.id)
                 setTimeout(function () {
                     delete cooldown[cooldown.indexOf(message.author.id)]
                     cooldown = cooldown.filter(Boolean)
                 }, 30000)
-            } else {
-                db.blingdata[message.author.id] = (Math.round(Math.random() * 5) + 5)
-            }
         }
         fs.writeFileSync('./data/currencystore.json', JSON.stringify(db.blingdata))
 

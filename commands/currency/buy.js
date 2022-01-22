@@ -10,7 +10,7 @@ module.exports = {
   desc: "Buy an item from the shop.",
   aliases: ["buy"],
   input: ["item"],
-  categories: [1],
+  categories: ["currency"],
   execute: function (client, message, args, db, prefix) {
     args = message.content.split(" ");
     if (!args[1])

@@ -6,7 +6,7 @@ name: "purge",
 desc: "Bulk delete a specific number of messages from a channel. Only usable by moderators.",
 aliases: ['purge'],
 input: ['amount'],
-categories: [3],
+categories: ["misc"],
 execute: function(client,message,args,db,prefix){
     message.guild.members.fetch(message.author.id).then(u => {
 

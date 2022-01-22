@@ -11,6 +11,12 @@ module.exports = [
     },
 
     {
+        name: "stats",
+        desc: ":mag: Get statistics on users, extra leaderboards, and more!"
+    },
+
+
+    {
 
         name: "samplepacks",
         desc: ":microphone: Contribute and buy from the community made samplepack database!"

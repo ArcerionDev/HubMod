@@ -6,7 +6,7 @@ module.exports = {
     desc: "Sort a list of userIDs into random teams of 2.",
     aliases: ['randomteams','rt'],
     input: ['IDs'],
-    categories: [0],
+    categories: ["challenges"],
     execute: function(client,message,args,db,prefix){
         if (args.length < 3) return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription(`<@${message.author.id}>, please include at least 2 IDs.`)] })
         if (args.length > 50) return message.reply({ embeds: [new MessageEmbed().setTitle('Invalid').setDescription(`<@${message.author.id}>, please limit your IDs to a maximum of 50.`)] })

@@ -6,7 +6,7 @@ module.exports = {
   desc: "Add an amount to a user's balance. Only usable by moderators.",
   aliases: ["add", "give"],
   input: ["@user", "amount"],
-  categories: [1],
+  categories: ["currency"],
   execute: function (client, message, args, db, prefix) {
     message.guild.members.fetch(message.author.id).then(async (e) => {
       if (!e.permissions.has("32"))
@@ -42,15 +42,7 @@ module.exports = {
 
       args[2] = args[2].replaceAll("k", "000");
 
-      let hasNonNum = false;
-
-      let numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
-      args[2].split("").forEach((e) => {
-        if (!numbers.includes(e)) {
-          hasNonNum = true;
-        }
-      });
-      if (hasNonNum)
+      if (isNaN(args[2]))
         return message.reply({
           embeds: [
             new MessageEmbed()
@@ -96,11 +88,8 @@ module.exports = {
           ],
         });
 
-      if (db.blingdata[subject]) {
-        db.blingdata[subject] = db.blingdata[subject] + parseInt(args[2]);
-      } else {
-        db.blingdata[subject] = parseInt(args[2]);
-      }
+        db.blingdata[subject] = (db.blingdata[subject] ? db.blingdata[subject] + parseInt(args[2]) : parseInt(args[2]))
+
       fs.writeFileSync(
         "./data/currencystore.json",
         JSON.stringify(db.blingdata)

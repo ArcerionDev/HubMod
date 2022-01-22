@@ -2,11 +2,11 @@ const fs = require('fs')
 const {MessageEmbed} = require('discord.js');
 const logger = require('../../utils/logger')
 module.exports = {
-    name: "bal",
+    name: "balance",
     desc: "Get a user's balance.",
     aliases: ["bal","balance"],
     input: ['@user (optional)'],
-    categories: [1],
+    categories: ["currency"],
     execute: function(client,message,args,db,prefix){
         message.guild.members.fetch(message.author.id).then(async e => {
 

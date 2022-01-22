@@ -9,7 +9,7 @@ module.exports = {
   name: "shop",
   desc: "Get a list of things you can buy with your bling.",
   aliases: ["shop"],
-  categories: [1],
+  categories: ["currency"],
   execute: function (client, message, args, db, prefix) {
     let shop = new MessageEmbed()
       .setTitle("The Bling Shop")

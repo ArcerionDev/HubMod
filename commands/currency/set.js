@@ -6,7 +6,7 @@ module.exports = {
   desc: "Set a user's balance. Only usable by moderators.",
   aliases: ["set"],
   input: ["@user", "amount"],
-  categories: [1],
+  categories: ["currency"],
   execute: function (client, message, args, db, prefix) {
     message.guild.members.fetch(message.author.id).then(async (e) => {
       if (!e.permissions.has("32"))

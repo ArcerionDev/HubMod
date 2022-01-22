@@ -2,11 +2,11 @@ const fs = require("fs");
 const { MessageEmbed } = require("discord.js");
 const logger = require("../../utils/logger")
 module.exports = {
-  name: "ec",
+  name: "endcustom",
   desc: "End a custom poll. Only usable by moderators and the creator of the poll.",
   aliases: ["endcustom", "ec"],
   input: ["ID"],
-  categories: [3],
+  categories: ["misc"],
   execute: function (client, message, args, db, prefix) {
     args = message.content.split(" ");
     message.guild.members.fetch(message.author.id).then((u) => {

@@ -6,7 +6,7 @@ module.exports = {
     name: "sc",
     desc: "Submit a challenge to the server database.",
     aliases: ['submitchallenge','sc'],
-    categories: [0],
+    categories: ["challenges"],
     execute: function(client,message,args,db,prefix){
 
           /* 0 is title

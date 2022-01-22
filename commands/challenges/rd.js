@@ -4,7 +4,7 @@ module.exports = {
     name: "rd",
     desc: "Get a random daily 30 from the last ~100.",
     aliases: ['rd', 'randomdaily'],
-    categories: [0],
+    categories: ["challenges"],
     execute: function (client, message, args, db, prefix) {
 
         message.guild.channels.fetch('484557165340655657').then(c => {

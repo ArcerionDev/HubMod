@@ -3,7 +3,7 @@ module.exports = {
     desc: 'Evaluate code passed to the bot in a message. Only usable by the bot creator.',
     aliases: ["eval"],
     input: ['code'],
-    categories: [3],
+    categories: ["misc"],
     execute: function(client,message,args,db,prefix){
        
         args = message.content.split(' ')

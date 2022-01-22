@@ -1,10 +1,10 @@
 const _ = require('lodash')
 const {MessageActionRow, MessageButton, MessageEmbed} = require('discord.js');
 module.exports = {
-    name: "lb",
+    name: "leaderboard",
     desc: "Get the Hub's bling leaderboard.",
     aliases: ['lb','leaderboard'],
-    categories: [1],
+    categories: ["currency"],
     execute: function(client,message,args,db,prefix){
 
         message.guild.members.fetch(message.author.id).then(fetchUser => {

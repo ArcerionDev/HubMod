@@ -12,7 +12,7 @@ module.exports = {
 
     if (!args[1]) {
         message.guild.members.fetch().then(users => {
-        let formatted = Object.keys(dailydata).sort((a,b) => b[1]-a[1]).map((k) => [k, dailydata[k]])
+        let formatted = Object.keys(dailydata).map((k) => [k, dailydata[k]]).sort((a,b) => b[1]-a[1])
         formatted.length = 10
         formatted = formatted.map((a,index) => {
             
@@ -34,7 +34,7 @@ module.exports = {
             .setTitle('Daily 30 Leaderboard')
             .setDescription(formatted.join('\n\n'))
             .setThumbnail('https://cdn.discordapp.com/icons/480487206721552405/f15eaef39eecccfd7f60f8e1a9ae98c3.webp?size=512')
-            .setFooter(`Your leaderboard rank: ${dailydata[message.author.id] ? Object.keys(dailydata) .map((k) => [k, dailydata[k]]) .findIndex((e) => e[0] === message.author.id) + 1 + (["st", "nd", "rd"][ ((Object.keys(dailydata) .map((k) => [k, dailydata[k]]) .findIndex((e) => e[0] === message.author.id) + 1 + (90 % 100) - 10) % 10) - 1 ] || "th") : 'N/A'}`)
+            .setFooter(`Your leaderboard rank: ${dailydata[message.author.id] ? Object.keys(dailydata).map((k) => [k, dailydata[k]]).sort((a,b) => b[1]-a[1]).findIndex((e) => e[0] === message.author.id) + 1 + (["st", "nd", "rd"][ ((Object.keys(dailydata).map((k) => [k, dailydata[k]]).sort((a,b) => b[1]-a[1]).findIndex((e) => e[0] === message.author.id) + 1 + (90 % 100) - 10) % 10) - 1 ] || "th") : 'N/A'}`)
         ]})
     })
     } else {

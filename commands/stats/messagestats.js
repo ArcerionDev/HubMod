@@ -2,7 +2,7 @@ const fs = require("fs");
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {
-  name: "dailystats",
+  name: "messagestats",
   desc: "Get info on a user's contribution to the total daily 30s, or get a leaderboard of the top contributors.",
   aliases: ["ms", "messagestats"],
   input: ["user (optional)"],

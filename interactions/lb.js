@@ -74,7 +74,7 @@ module.exports = {
         
         if (interaction.user.id != interaction.customId.split('_')[1]) {
 
-            return interaction.message.reply({
+            return interaction.reply({
                 embeds: [new MessageEmbed().setTitle("Invalid").setDescription("It's not your message.")],
                 ephemeral: [true]
             }).catch(e => { console.log(e) })

@@ -20,7 +20,7 @@ module.exports = {
 
     let selectedOpt = parsed[1];
     if (!fs.existsSync(`./data/custompolls/${selectedId}.json`))
-      return interaction.message
+    return interaction
         .reply({
           embeds: [
             new MessageEmbed()

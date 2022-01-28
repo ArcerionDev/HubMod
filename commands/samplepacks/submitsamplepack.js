@@ -79,10 +79,10 @@ module.exports = {
                                                                                         logger.log({
 
                                                                                             action: "submitSamplepack",
-                                                                                            channel: interaction.message.channel.id,
-                                                                                            desc: `<@${interaction.user.id}> submitted samplepack ${sd.title} (${sd.id}) to the samplepack queue.`,
-                                                                                            executor: interaction.user.id,
-                                                                                            url: interaction.message.url
+                                                                                            channel: amt.first().channel.id,
+                                                                                            desc: `<@${amt.first().author.id}> submitted samplepack ${sd.title} (${sd.id}) to the samplepack queue.`,
+                                                                                            executor: amt.first().author.id,
+                                                                                            url: amt.first().message.url
                                                                                         },client,db)
                                                                                        
                                                                                         let toSend = { embeds: [new MessageEmbed().setTitle('New queued samplepack with ID `' + sd.id + "`.").addField(`Title - ${sd.title} • Description - ${sd.desc}`, `Cost - ${sd.value} • URL - ${sd.url}`, false).setDescription(`Run the command ` + '`' + `${prefix}approve ${sd.id}` + '` to approve this submission.')] }

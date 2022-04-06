@@ -13,17 +13,19 @@ module.exports = {
         let chal = temp[interaction.customId.split('_')[2]]
 
         if (interaction.user.id != interaction.customId.split('_')[1]) {
-            return interaction.message.reply({
+             return interaction.reply({
                 embeds: [new MessageEmbed().setTitle("Invalid").setDescription("It's not your message.")],
                ephemeral: [true]
             }).catch(error => { console.log(error) })
-    
         }
 
-        if(!chal) return interaction.message.reply({
+        if(!chal) {
+            interaction.reply({
             embeds: [new MessageEmbed().setTitle("Error").setDescription("Invalid challenge.")],
             ephemeral: [true]
          }).catch(error => { console.log(error) })
+        return interaction.deferUpdate();
+        }
 
     let id = interaction.customId.slice(0).split('_')[0]
         if (id === "y") {
@@ -51,12 +53,12 @@ module.exports = {
     
             })
         }
-        if (interaction.customId === "n") {
+        if (id === "n") {
             interaction.message.components[0].components[0].setDisabled(true)
             interaction.message.components[0].components[1].setDisabled(true)
-            interaction.deferUpdate()
-            interaction.message.edit({ embeds: [new MessageEmbed().setTitle('Alright, your amount is set to `' + amount.first().content + '`!\n\n').setDescription('Your submission will next be sent to a queue. Does this look ok?').addField(`${chal[0]} • Team members - ${chal[2]}`, `${chal[1]} • Submitted by <@${chal[3]}>`, false)], components: [interaction.message.components[0]] }).catch(error => { console.log(error) })
+            interaction.message.edit({ embeds: [new MessageEmbed().setTitle(interaction.message.embeds[0].title).setDescription('Your submission will next be sent to a queue. Does this look ok?').addField(`${chal[0]} • Team members - ${chal[2]}`, `${chal[1]} • Submitted by <@${chal[3]}>`, false)], components: [interaction.message.components[0]] }).catch(error => { console.log(error) })            //interaction.deferUpdate();
             delete temp[interaction.customId.split('_')[2]]
+            
             fs.writeFileSync('./data/temp.json', JSON.stringify(temp))
             return interaction.message.reply({ embeds: [new MessageEmbed().setTitle('Alright.').setDescription(`Restart the command if you'd like to resubmit a new challenge.`)] }).catch(error => { console.log(error) })
     

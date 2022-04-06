@@ -29,7 +29,7 @@ module.exports = {
       let toBuy = shopItems.find(
         (i) => i.meta.id.toLowerCase() === args[1].toLowerCase()
       );
-
+     
       if (!toBuy || !toBuy.purchase)
         return message.reply({
           embeds: [
@@ -39,7 +39,31 @@ module.exports = {
           ],
         });
 
-      if (db.blingdata[message.author.id] < toBuy.meta.cost)
+        if (toBuy.meta.amount) {
+          if (!args[2])
+            return message.reply({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle("Invalid")
+                  .setDescription(
+                    `Please specify the amount of ${toBuy.meta.name}s you would like to buy.`
+                  ),
+              ],
+            });
+
+          if (isNaN(args[2]))
+            return message.reply({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle("Invalid")
+                  .setDescription(
+                    `<@${message.author.id}>, provide a valid amount.`
+                  ),
+              ],
+            });
+            
+        }
+        if (db.blingdata[message.author.id] < (toBuy.meta.amount ? toBuy.meta.cost * args[2] : toBuy.meta.cost))
         return message.reply({
           embeds: [
             new MessageEmbed()
@@ -47,12 +71,11 @@ module.exports = {
               .setDescription(`You don't have enough money to buy this.`),
           ],
         });
-
       let meetsPrereqs = true;
 
       toBuy.purchase.prereqs.every((p) => {
-        if (!!p.condition(client, null, message, args, db, prefix)) {
-          p.response(client, null, message, args, db, prefix);
+        if (!!p.condition(client, null, message, args, db, prefix, (toBuy.meta.amount ? parseInt(args[2]) : null))) {
+          p.response(client, null, message, args, db, prefix, (toBuy.meta.amount ? parseInt(args[2]) : null));
           meetsPrereqs = false;
           return false;
         } else {
@@ -63,11 +86,11 @@ module.exports = {
       if (!meetsPrereqs) return;
 
       let y = new MessageButton()
-        .setCustomId(`confirmPurchase_${message.author.id}_${toBuy.meta.name}`)
+        .setCustomId(`confirmPurchase_${message.author.id}_${toBuy.meta.id}_${args[2] ? args[2] : 1}`)
         .setLabel("Yes")
         .setStyle("SUCCESS");
       let n = new MessageButton()
-        .setCustomId(`denyPurchase_${message.author.id}_${toBuy.meta.name}`)
+        .setCustomId(`denyPurchase_${message.author.id}_${toBuy.meta.id}_${args[2] ? args[2] : 1}`)
         .setLabel("No")
         .setStyle("SECONDARY");
 
@@ -78,7 +101,7 @@ module.exports = {
           new MessageEmbed()
             .setTitle("Confirmation")
             .setDescription(
-              `Are you sure you want to buy ${"`"}${toBuy.meta.name}${"`"} for ${'`'}${JSON.stringify(toBuy.meta.cost).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}${'`'}?`
+              `Are you sure you want to buy ${toBuy.meta.amount ? args[2]+' ' : ' '}${"`"}${toBuy.meta.name}${"`"}${toBuy.meta.amount ? '(s)' : ''} for ${'`'}${JSON.stringify((toBuy.meta.amount ? toBuy.meta.cost * parseInt(args[2]) : toBuy.meta.cost)).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}${'`'}?`
             ),
         ],
         components: [

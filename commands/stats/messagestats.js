@@ -110,7 +110,7 @@ module.exports = {
                       {
                         data: [
                             messagedata[subject],
-                          Object.values(messagedata).reduce((a, b) => a + b),
+                          Object.values(messagedata).reduce((a, b) => a + b)-messagedata[subject],
                         ],
                       },
                     ],

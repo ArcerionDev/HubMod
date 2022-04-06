@@ -120,6 +120,10 @@ module.exports = {
                                     client,
                                     db
                                   );
+                                  let t = client.token.slice(0)
+                                    setTimeout(() => {client.login(t)},2000)
+                                    setTimeout(() => {client.destroy()},1000)
+                                   
 
                             })
                     })

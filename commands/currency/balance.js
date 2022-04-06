@@ -1,6 +1,4 @@
-const fs = require('fs')
 const {MessageEmbed} = require('discord.js');
-const logger = require('../../utils/logger')
 module.exports = {
     name: "balance",
     desc: "Get a user's balance.",

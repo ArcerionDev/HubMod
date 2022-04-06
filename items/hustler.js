@@ -20,16 +20,17 @@ module.exports = {
     desc: `Gain the **<@&${db.roles.hustler}>** role. Gives you a special color above everyone else, exclusive chat access, and the ability to react to more messages.`,
     displayCost: 50000,
     cost: 50000,
+    amount: false,
   },
   purchase: {
     prereqs: [
       {
-        condition: function (client, interaction, message, args, db, prefix) {
+        condition: function (client, interaction, message, args, db, prefix, amount) {
           return !!message.guild.members.cache
             .get(message.author.id)
             ._roles.includes(db.roles.hustler);
         },
-        response: function (client, interaction, message, args, db, prefix) {
+        response: function (client, interaction, message, args, db, prefix, amount) {
           message.reply({
             embeds: [
               new MessageEmbed()
@@ -40,7 +41,7 @@ module.exports = {
         },
       },
     ],
-    onpurchase: function (client, interaction, message, args, db, prefix) {
+    onpurchase: function (client, interaction, message, args, db, prefix, amount) {
       interaction.guild.members.cache
         .get(interaction.user.id)
         .roles.add(db.roles.hustler);

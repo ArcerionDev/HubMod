@@ -1,5 +1,4 @@
-const { Client, Intents, MessageEmbed, MessageActionRow, MessageButton, DiscordAPIError, Message, Collection } = require('discord.js');
-const _ = require('lodash')
+const { Client, Intents, MessageEmbed, Collection } = require('discord.js');
 const fs = require('fs');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.DIRECT_MESSAGES] });
 client.commands = new Collection();
@@ -71,7 +70,7 @@ client.on('message', async message => {
         let messagedata = JSON.parse(fs.readFileSync('./data/stats/messages.json','utf8'))
         
         messagedata[message.author.id] = (messagedata[message.author.id] ? ++messagedata[message.author.id] : 1)
-
+        
         fs.writeFileSync('./data/stats/messages.json',JSON.stringify(messagedata))
         if (!cooldown.includes(message.author.id)) {
             

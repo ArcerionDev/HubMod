@@ -110,7 +110,7 @@ module.exports = {
                       {
                         data: [
                           dailydata[subject],
-                          Object.values(dailydata).reduce((a, b) => a + b),
+                          Object.values(dailydata).reduce((a, b) => a + b) - dailydata[subject],
                         ],
                       },
                     ],

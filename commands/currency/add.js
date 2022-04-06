@@ -4,7 +4,7 @@ const logger = require("../../utils/logger");
 module.exports = {
   name: "add",
   desc: "Add an amount to a user's balance. Only usable by moderators.",
-  aliases: ["add", "give"],
+  aliases: ["add"],
   input: ["@user", "amount"],
   categories: ["currency"],
   execute: function (client, message, args, db, prefix) {

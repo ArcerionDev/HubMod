@@ -43,7 +43,7 @@ module.exports = {
         });
 
     let toBuy = shopItems.find(
-      (i) => i.meta.name.toLowerCase() === parsed[2].toLowerCase()
+      (i) => i.meta.id.toLowerCase() === parsed[2].toLowerCase()
     );
 
     if(!db.samplepacks[parsed[2]]){
@@ -148,12 +148,12 @@ module.exports = {
       }else{
 
         db.blingdata[interaction.user.id] =
-        db.blingdata[interaction.user.id] - toBuy.meta.cost;
+        db.blingdata[interaction.user.id] - toBuy.meta.cost * parseInt(interaction.customId.slice(0).split('_')[3]);
       fs.writeFileSync(
         "./data/currencystore.json",
         JSON.stringify(db.blingdata)
       );
-      toBuy.purchase.onpurchase(client, interaction, null, null, db, prefix)
+      toBuy.purchase.onpurchase(client, interaction, null, null, db, prefix, parseInt(interaction.customId.slice(0).split('_')[3]))
     interaction.message.components[0].components[0].setDisabled(true);
     interaction.message.components[0].components[1].setDisabled(true);
      interaction.message.edit({
@@ -165,7 +165,7 @@ module.exports = {
         {
           action: "buyItem",
           channel: interaction.channel.id,
-          desc: `<@${interaction.user.id}> bought the shop item ${toBuy.meta.name} for ${toBuy.meta.cost}.`,
+          desc: `<@${interaction.user.id}> bought ${interaction.customId.slice(0).split('_')[3]}x ${toBuy.meta.name} for ${toBuy.meta.cost * parseInt(interaction.customId.slice(0).split('_')[3])}.`,
           executor: interaction.user.id,
           url: interaction.url,
         },
@@ -185,7 +185,7 @@ module.exports = {
         components: [interaction.message.components[0]],
       });
 
-      interaction.message.reply({
+      interaction.reply({
         embeds: [
           new MessageEmbed()
             .setTitle("Alright.")

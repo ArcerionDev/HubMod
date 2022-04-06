@@ -1,6 +1,4 @@
-const fs = require("fs");
 const {MessageEmbed, MessageActionRow, MessageButton} = require('discord.js');
-const logger = require("./logger");
 
 module.exports = function (client, interaction, message, args, db, prefix) {
   let data = db.samplepacks[args[1]];

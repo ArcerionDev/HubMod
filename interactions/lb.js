@@ -1,4 +1,3 @@
-const fs = require('fs')
 const {MessageEmbed} = require('discord.js');
 const _ = require('lodash')
 
@@ -48,7 +47,7 @@ module.exports = {
             let desc = `Your leaderboard rank: **${rank ? rank : 'N/A'}**\n\n`
 
 
-            if (!paginated[arrnum]) return interaction.message.reply({ content: ['An error occurred.'] })
+            if (!paginated[arrnum]) return interaction.reply({ content: ['An error occurred.'] })
 
             for (let i = 0; i < paginated[arrnum].length; i++) {
 
@@ -59,13 +58,13 @@ module.exports = {
                     if (u[0] === Object.keys(paginated[arrnum][i])[0]) {
 
                         hasMatch = true
-                        desc = desc + `**#${getRankFromUid(Object.keys(paginated[arrnum][i])[0])}:** ${u[1].user.tag} • <:bling:693310674612387862> ${paginated[arrnum][i][Object.keys(paginated[arrnum][i])[0]]}\n\n`
+                        desc = desc + `**#${getRankFromUid(Object.keys(paginated[arrnum][i])[0])}:** ${u[1].user.tag} • <:bling:693310674612387862> ${JSON.stringify(paginated[arrnum][i][Object.keys(paginated[arrnum][i])[0]]).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n\n`
 
                     }
 
                 })
 
-                if (!hasMatch) { desc = desc + `**#${getRankFromUid(Object.keys(paginated[arrnum][i])[0])}:** ${Object.keys(paginated[arrnum][i])[0]} • <:bling:693310674612387862> ${paginated[arrnum][i][Object.keys(paginated[arrnum][i])[0]]}\n\n` }
+                if (!hasMatch) { desc = desc + `**#${getRankFromUid(Object.keys(paginated[arrnum][i])[0])}:** ${Object.keys(paginated[arrnum][i])[0]} • <:bling:693310674612387862> ${JSON.stringify(paginated[arrnum][i][Object.keys(paginated[arrnum][i])[0]]).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n\n` }
 
             }
             lbemd.setDescription(desc)

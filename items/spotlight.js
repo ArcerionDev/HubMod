@@ -20,16 +20,17 @@ module.exports = {
     desc: `Get a chance to advertise your creations in <#${db.channels.spotlight}> for all to see!`,
     displayCost: 10000,
     cost: 10000,
-  },
+    amount: false,
+    },
   purchase: {
     prereqs: [
       {
-        condition: function (client, interaction, message, args, db, prefix) {
+        condition: function (client, interaction, message, args, db, prefix, amount) {
           return !!message.guild.members.cache
             .get(message.author.id)
             ._roles.includes(db.roles.spotlight);
         },
-        response: function (client, interaction, message, args, db, prefix) {
+        response: function (client, interaction, message, args, db, prefix, amount) {
           message.reply({
             embeds: [
               new MessageEmbed()
@@ -42,7 +43,7 @@ module.exports = {
         }
       }
     ],
-    onpurchase: function (client, interaction, message, args, db, prefix) {
+    onpurchase: function (client, interaction, message, args, db, prefix, amount) {
       interaction.guild.members.cache
         .get(interaction.user.id)
         .roles.add(db.roles.spotlight);

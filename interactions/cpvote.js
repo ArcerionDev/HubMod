@@ -2,8 +2,8 @@ const fs = require("fs");
 
 const { MessageEmbed } = require("discord.js");
 
-let cpids = fs.readdirSync("./data/custompolls/").slice(0);
-
+let cpids = fs.readdirSync("./data/custompolls/");
+  
 cpids.forEach((i, index) => {
   cpids[index] = i.replace(".json", "");
 });

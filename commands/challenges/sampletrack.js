@@ -1,5 +1,6 @@
 const fs = require('fs')
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
+const logger = require('../../utils/logger')
 module.exports = {
     name: "sampletrack",
     desc: "Find a sample to pick for a sample track challenge. Only usable by moderators.",
